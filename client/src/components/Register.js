@@ -11,14 +11,19 @@ const Register = () => {
 
     const onSubmit = async (data) => {
         try {
-            // Sends data to your Node.js backend
-            await axios.post('http://localhost:5000/api/auth/register', data);
+            // UPDATED: Points to your live Render Backend
+            await axios.post('https://mern-auth-project-hv8z.onrender.com/api/auth/register', data);
+            
             setMessage({ type: 'success', text: 'Registration Successful! Redirecting to login...' });
             
             // Move to login page after 2 seconds
             setTimeout(() => navigate('/'), 2000);
         } catch (err) {
-            setMessage({ type: 'error', text: err.response?.data?.error || 'Registration failed' });
+            // Displays specific error from backend or a generic message
+            setMessage({ 
+                type: 'error', 
+                text: err.response?.data?.message || err.response?.data?.error || 'Registration failed' 
+            });
         }
     };
 
@@ -59,7 +64,7 @@ const Register = () => {
                         helperText={errors.password?.message}
                     />
 
-                    {/* IMPORTANT: Role selection for Experiment 3 (RBAC) */}
+                    {/* Role selection for Experiment 3: Role-Based Access Control */}
                     <TextField
                         select
                         fullWidth
