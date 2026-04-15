@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { TextField, Button, Box, Typography, Container, Alert, CircularProgress } from '@mui/material';
-import axios from 'axios'; // This was missing!
+import axios from 'axios';
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const [loading, setLoading] = useState(false); // Defines setLoading
-    const [message, setMessage] = useState({ type: '', text: '' }); // Defines setMessage
+    const [loading, setLoading] = useState(false);
+    const [message, setMessage] = useState({ type: '', text: '' });
 
     const onSubmit = async (data) => {
         setLoading(true);
         setMessage({ type: '', text: '' });
         try {
-            const response = await axios.post('http://localhost:5000/api/auth/login', data);
+            // UPDATED: Now points to your Render Backend
+            const response = await axios.post('https://mern-auth-project-hv8z.onrender.com/api/auth/login', data);
             
-            // Experiment 2 & 3: Save data for the Guard to check
+            // Save token and user details for Experiments 2 & 3
             localStorage.setItem('token', response.data.token);
             localStorage.setItem('user', JSON.stringify(response.data.user)); 
 
             setMessage({ type: 'success', text: 'Login Successful!' });
-            // Refresh to update UI/Redirect
+            
+            // Redirect to Admin Dashboard
             setTimeout(() => { window.location.href = '/admin'; }, 1000);
         } catch (err) {
             setMessage({ type: 'error', text: err.response?.data?.message || 'Login Failed' });
